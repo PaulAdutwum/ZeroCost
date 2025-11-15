@@ -1,0 +1,94 @@
+spring:
+  application:
+    name: zerocost-api
+  
+  datasource:
+    url: ${DATABASE_URL:jdbc:postgresql://localhost:5432/zerocost}
+    username: ${POSTGRES_USER:zerocost}
+    password: ${POSTGRES_PASSWORD:zerocost123}
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      maximum-pool-size: 20
+      minimum-idle: 5
+      connection-timeout: 30000
+  
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    show-sql: false
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+        jdbc:
+          time_zone: UTC
+    open-in-view: false
+  
+  data:
+    redis:
+      host: ${REDIS_HOST:localhost}
+      port: ${REDIS_PORT:6379}
+      password: ${REDIS_PASSWORD:}
+      timeout: 2000ms
+      lettuce:
+        pool:
+          max-active: 8
+          max-idle: 8
+          min-idle: 2
+  
+  cache:
+    type: redis
+    redis:
+      time-to-live: 3600000 # 1 hour
+  
+  jackson:
+    serialization:
+      write-dates-as-timestamps: false
+    time-zone: UTC
+
+server:
+  port: ${PORT:8080}
+  compression:
+    enabled: true
+  error:
+    include-message: always
+
+# Application Configuration
+app:
+  jwt:
+    secret: ${JWT_SECRET:change-this-secret-key-in-production-must-be-at-least-256-bits}
+    expiration: 86400000 # 24 hours
+  
+  ranking-engine:
+    url: ${RANKING_ENGINE_URL:http://localhost:8082}
+    timeout: 10000
+  
+  cache:
+    events-ttl: 300 # 5 minutes
+    user-ttl: 3600 # 1 hour
+
+# Actuator
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,prometheus
+  endpoint:
+    health:
+      show-details: when-authorized
+  metrics:
+    export:
+      prometheus:
+        enabled: true
+
+# Logging
+logging:
+  level:
+    root: INFO
+    com.zerocost: ${LOG_LEVEL:INFO}
+    org.springframework.web: ${LOG_LEVEL:INFO}
+    org.hibernate.SQL: WARN
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} - %msg%n"
+
+

@@ -1,0 +1,121 @@
+version: '3.9'
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: zerocost-postgres
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-zerocost}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-zerocost123}
+      POSTGRES_DB: ${POSTGRES_DB:-zerocost}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./postgres/init.sql:/docker-entrypoint-initdb.d/init.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-zerocost}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - zerocost-network
+
+  redis:
+    image: redis:7-alpine
+    container_name: zerocost-redis
+    command: redis-server --requirepass ${REDIS_PASSWORD:-}
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - zerocost-network
+
+  ranking-engine:
+    build:
+      context: ../backend/ranking-engine
+      dockerfile: Dockerfile
+    container_name: zerocost-ranking-engine
+    ports:
+      - "8082:8082"
+    environment:
+      PORT: 8082
+      LOG_LEVEL: ${LOG_LEVEL:-info}
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8082/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    networks:
+      - zerocost-network
+
+  java-api:
+    build:
+      context: ../backend/java-api
+      dockerfile: Dockerfile
+    container_name: zerocost-java-api
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_PROFILES_ACTIVE: ${SPRING_PROFILES_ACTIVE:-prod}
+      DATABASE_URL: postgresql://postgres:5432/${POSTGRES_DB:-zerocost}
+      POSTGRES_USER: ${POSTGRES_USER:-zerocost}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-zerocost123}
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      REDIS_PASSWORD: ${REDIS_PASSWORD:-}
+      RANKING_ENGINE_URL: http://ranking-engine:8082
+      JWT_SECRET: ${JWT_SECRET}
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      ranking-engine:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/actuator/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    networks:
+      - zerocost-network
+
+  go-scraper:
+    build:
+      context: ../backend/go-scraper
+      dockerfile: Dockerfile
+    container_name: zerocost-go-scraper
+    ports:
+      - "8081:8081"
+    environment:
+      PORT: 8081
+      JAVA_API_URL: http://java-api:8080
+      SCRAPER_INTERVAL_MINUTES: ${SCRAPER_INTERVAL_MINUTES:-30}
+      SCRAPER_USER_AGENT: ${SCRAPER_USER_AGENT:-ZeroCostBot/1.0}
+      REDDIT_CLIENT_ID: ${REDDIT_CLIENT_ID}
+      REDDIT_CLIENT_SECRET: ${REDDIT_CLIENT_SECRET}
+      EVENTBRITE_API_KEY: ${EVENTBRITE_API_KEY}
+      MEETUP_API_KEY: ${MEETUP_API_KEY}
+      LOG_LEVEL: ${LOG_LEVEL:-info}
+    depends_on:
+      java-api:
+        condition: service_healthy
+    networks:
+      - zerocost-network
+
+volumes:
+  postgres_data:
+  redis_data:
+
+networks:
+  zerocost-network:
+    driver: bridge
+
+

@@ -1,0 +1,121 @@
+# OS
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+*.swp
+*.swo
+*~
+
+# IDE
+.idea/
+.vscode/
+*.iml
+*.ipr
+*.iws
+.project
+.classpath
+.settings/
+
+# Environment & Secrets
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+.env*.local
+*.pem
+*.key
+*.p12
+*.jks
+secrets/
+credentials/
+
+# Frontend (Next.js)
+frontend/node_modules/
+frontend/.next/
+frontend/out/
+frontend/build/
+frontend/dist/
+frontend/.env.local
+frontend/.env*.local
+frontend/.vercel
+
+# Java
+backend/java-api/target/
+backend/java-api/.mvn/
+backend/java-api/mvnw
+backend/java-api/mvnw.cmd
+backend/java-api/.env
+backend/java-api/application-*.yml
+backend/java-api/application-*.properties
+!backend/java-api/application.yml
+*.class
+*.jar
+*.war
+*.ear
+*.log
+
+# Go
+backend/go-scraper/go-scraper
+backend/go-scraper/vendor/
+backend/go-scraper/.env
+
+# C++
+backend/ranking-engine/build/
+backend/ranking-engine/cmake-build-*/
+backend/ranking-engine/.env
+*.o
+*.a
+*.so
+*.dylib
+*.exe
+
+# Docker
+docker-compose.override.yml
+*.log
+
+# Database
+*.db
+*.sqlite
+*.sql.backup
+pgdata/
+postgres-data/
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+.pnpm-debug.log*
+
+# Runtime data
+pids/
+*.pid
+*.seed
+*.pid.lock
+
+# Coverage
+coverage/
+*.lcov
+.nyc_output/
+
+# Cache
+.cache/
+.parcel-cache/
+.npm/
+.eslintcache
+
+# Misc
+*.bak
+*.tmp
+*.temp
+.terraform/
+terraform.tfstate*
+
+
