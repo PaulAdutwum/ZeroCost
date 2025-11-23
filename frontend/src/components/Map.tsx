@@ -29,8 +29,47 @@ export default function Map({ events, center, selectedEvent, onSelectEvent }: Ma
     }
   }, [center])
 
+  // Show error if no Mapbox token
+  if (!MAPBOX_TOKEN || MAPBOX_TOKEN === 'your-mapbox-token-here') {
+    return (
+      <div className="w-full h-full flex items-center justify-center bg-gray-100">
+        <div className="text-center p-8 bg-white rounded-lg shadow-lg max-w-md">
+          <div className="text-6xl mb-4">🗺️</div>
+          <h2 className="text-2xl font-bold text-gray-800 mb-2">Mapbox Token Required</h2>
+          <p className="text-gray-600 mb-4">
+            To see the interactive map, you need to add a Mapbox token.
+          </p>
+          <div className="text-left bg-gray-50 p-4 rounded-lg text-sm space-y-2">
+            <p className="font-semibold text-gray-700">Setup Instructions:</p>
+            <ol className="list-decimal list-inside space-y-1 text-gray-600">
+              <li>Go to <a href="https://account.mapbox.com/" target="_blank" rel="noopener noreferrer" className="text-primary-600 hover:underline">mapbox.com</a></li>
+              <li>Sign up (free)</li>
+              <li>Copy your access token</li>
+              <li>Add to <code className="bg-gray-200 px-1 rounded">frontend/.env.local</code></li>
+            </ol>
+          </div>
+          <p className="text-xs text-gray-500 mt-4">
+            Showing {events.length} events in sidebar
+          </p>
+        </div>
+      </div>
+    )
+  }
+
   return (
     <div className="w-full h-full relative">
+      {/* Event count badge */}
+      {events.length > 0 && (
+        <div className="absolute top-4 left-4 z-10 bg-white px-4 py-2 rounded-lg shadow-lg">
+          <div className="flex items-center space-x-2">
+            <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+            <span className="text-sm font-medium text-gray-700">
+              {events.length} {events.length === 1 ? 'event' : 'events'} on map
+            </span>
+          </div>
+        </div>
+      )}
+
       <MapGL
         ref={mapRef}
         initialViewState={{
@@ -98,16 +137,39 @@ export default function Map({ events, center, selectedEvent, onSelectEvent }: Ma
             closeOnClick={false}
             className="max-w-xs"
           >
-            <div className="p-2">
-              <h3 className="font-bold text-lg mb-1">{selectedEventData.title}</h3>
-              <p className="text-sm text-gray-600 mb-2">
-                {selectedEventData.description?.substring(0, 100)}
-                {selectedEventData.description?.length > 100 ? '...' : ''}
+            <div className="p-3">
+              <div className="flex items-start justify-between mb-2">
+                <h3 className="font-bold text-base leading-tight flex-1 pr-2">
+                  {selectedEventData.title}
+                </h3>
+                <span className={`text-xs px-2 py-0.5 rounded-full whitespace-nowrap ${getCategoryBadgeColorForPopup(selectedEventData.category)}`}>
+                  {getCategoryEmoji(selectedEventData.category)}
+                </span>
+              </div>
+              <p className="text-sm text-gray-600 mb-2 line-clamp-2">
+                {selectedEventData.description?.substring(0, 150)}
+                {selectedEventData.description && selectedEventData.description.length > 150 ? '...' : ''}
               </p>
-              <div className="flex items-center justify-between text-xs text-gray-500">
-                <span>{getCategoryEmoji(selectedEventData.category)} {selectedEventData.category}</span>
-                {selectedEventData.distanceKm && (
-                  <span>📍 {selectedEventData.distanceKm.toFixed(1)} km</span>
+              <div className="space-y-1 text-xs text-gray-500">
+                <div className="flex items-center justify-between">
+                  <span className="flex items-center">
+                    <span className="mr-1">{getCategoryEmoji(selectedEventData.category)}</span>
+                    {selectedEventData.category}
+                  </span>
+                  {selectedEventData.distanceKm && (
+                    <span className="font-medium">📍 {selectedEventData.distanceKm.toFixed(1)} km away</span>
+                  )}
+                </div>
+                {selectedEventData.sourceUrl && (
+                  <a
+                    href={selectedEventData.sourceUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-primary-600 hover:text-primary-700 font-medium inline-flex items-center mt-2"
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    View Details →
+                  </a>
                 )}
               </div>
             </div>
@@ -144,6 +206,20 @@ function getCategoryEmoji(category: string): string {
     'Health & Wellness': '🧘',
   }
   return emojis[category] || '📍'
+}
+
+function getCategoryBadgeColorForPopup(category: string): string {
+  const colors: Record<string, string> = {
+    'Free Food': 'bg-orange-100 text-orange-700',
+    'Campus Events': 'bg-blue-100 text-blue-700',
+    'Community Events': 'bg-green-100 text-green-700',
+    'Giveaways': 'bg-purple-100 text-purple-700',
+    'Workshops': 'bg-yellow-100 text-yellow-700',
+    'Entertainment': 'bg-pink-100 text-pink-700',
+    'Sports': 'bg-red-100 text-red-700',
+    'Health & Wellness': 'bg-teal-100 text-teal-700',
+  }
+  return colors[category] || 'bg-gray-100 text-gray-700'
 }
 
 
