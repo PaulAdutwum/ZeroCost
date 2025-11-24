@@ -4,7 +4,7 @@
 
 ZeroCost is a full-stack, multi-language application that aggregates, ranks, and displays free opportunities on an interactive map. Built as a systems engineering portfolio project demonstrating distributed architecture, microservices, and modern web development.
 
-## 🏗️ Architecture
+##  Architecture
 
 - **Frontend**: Next.js (TypeScript, React, Mapbox)
 - **Backend API**: Java Spring Boot
