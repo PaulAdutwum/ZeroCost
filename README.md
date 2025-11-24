@@ -14,7 +14,7 @@ ZeroCost is a full-stack, multi-language application that aggregates, ranks, and
 - **Cache**: Redis
 - **Deployment**: Docker, Vercel, Render/Fly.io
 
-## 🚀 Quick Start
+##  Quick Start
 
 ### Prerequisites
 
@@ -76,7 +76,7 @@ npm run dev
 
 Access the app at `http://localhost:3000`
 
-## 📦 Docker Deployment
+##  Docker Deployment
 
 Build and run all services with Docker Compose:
 
@@ -102,14 +102,14 @@ cd backend/ranking-engine/build && make test
 cd frontend && npm test
 ```
 
-## 📚 Documentation
+## Documentation
 
 - [Frontend Documentation](./frontend/README.md)
 - [Java API Documentation](./backend/java-api/README.md)
 - [Go Scraper Documentation](./backend/go-scraper/README.md)
 - [C++ Ranking Engine Documentation](./backend/ranking-engine/README.md)
 
-## 🗂️ Project Structure
+## Project Structure
 
 ```
 zerocost/
@@ -122,15 +122,15 @@ zerocost/
 └── SPEC.md              # Full specification
 ```
 
-## 🔑 Environment Variables
+##  Environment Variables
 
 See `.env.example` for required environment variables.
 
-## 🤝 Contributing
+## Contributing
 
 This is a portfolio project, but feedback and suggestions are welcome!
 
-## 📄 License
+## License
 
 MIT License
 
