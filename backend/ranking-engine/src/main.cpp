@@ -4,6 +4,8 @@
 #include <iostream>
 #include <cstdlib>
 #include <csignal>
+#include <sstream>
+#include <iomanip>
 
 using json = nlohmann::json;
 using namespace zerocost;
