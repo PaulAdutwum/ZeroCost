@@ -36,6 +36,16 @@ cp .env.example .env
 
 ## Step 3: Start Backend Services
 
+### Option A: Use the Start Script (Recommended)
+
+```bash
+./scripts/start-dev.sh
+```
+
+This automatically starts all services and waits for them to be ready.
+
+### Option B: Manual Docker Compose
+
 ```bash
 cd infra
 docker-compose up -d
@@ -237,6 +247,22 @@ Frontend (3000) → Java API (8080) → C++ Ranking (8082)
                   PostgreSQL (5432)   Redis (6379)
                       ↑
                   Go Scraper (8081)
+```
+
+## Helper Scripts
+
+```bash
+# Start all services (recommended for development)
+./scripts/start-dev.sh
+
+# Stop all services
+./scripts/stop-dev.sh
+
+# Test all API endpoints
+./scripts/test-api.sh
+
+# Seed sample data (requires Java API running)
+./scripts/seed-data.sh
 ```
 
 ## Useful Commands

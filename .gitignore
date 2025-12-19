@@ -119,3 +119,7 @@ coverage/
 terraform.tfstate*
 
 
+
+# Compiled binaries
+backend/go-scraper/scraper
+backend/ranking-engine/build/
