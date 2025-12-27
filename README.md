@@ -126,7 +126,7 @@ zerocost/
 
 ##  Environment Variables
 
-See `.env.example` for required environment variables.
+See `.env` for required environment variables.
 
 ## Contributing
 
