@@ -34,12 +34,14 @@ cd ZeroCost
 
 2. **Set up environment variables**
 ```bash
+
 cp .env.example .env
 # Edit .env with your credentials
 ```
 
 3. **Start infrastructure services**
 ```bash
+
 cd infra
 docker-compose up -d
 ```
@@ -84,7 +86,7 @@ Build and run all services with Docker Compose:
 docker-compose -f infra/docker-compose.yml up --build
 ```
 
-## 🧪 Testing
+## Testing
 
 Each service includes its own test suite:
 
