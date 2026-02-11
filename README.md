@@ -25,7 +25,6 @@ ZeroCost is a full-stack, multi-language application that aggregates, ranks, and
 - CMake 3.20+
 
 ### Local Development
-
 1. **Clone the repository**
 ```bash
 git clone <repo-url>
@@ -62,7 +61,6 @@ make
 cd backend/go-scraper
 go run main.go
 ```
-
 **Java API:**
 ```bash
 cd backend/java-api
